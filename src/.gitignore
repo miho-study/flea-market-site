@@ -1,0 +1,29 @@
+/node_modules
+/public/hot
+/public/storage
+/storage/*.key
+/vendor
+.env
+.env.backup
+.phpunit.result.cache
+docker-compose.override.yml
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+/.idea
+/.vscode
+docker/mysql/data/
+**/.DS_Store
+**/docker/mysql/data/
+/.pnp
+.pnp.js
+
+# ビルド出力
+/dist
+
+# ログファイル
+*.log
+
+# エディタの設定、作業ディレクトリ
+.vscode

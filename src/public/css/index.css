@@ -1,0 +1,69 @@
+.container {
+    padding: 40px;
+}
+
+/* ===== タブ切り替え部分 ===== */
+.tab-container {
+    display: flex;
+    justify-content: center;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 30px;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    padding: 10px 20px;
+    cursor: pointer;
+    color: #555;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s;
+}
+
+.tab-btn:hover {
+    color: #000;
+}
+
+.tab-btn.active {
+    color: red;
+    border-bottom: 3px solid red;
+}
+
+/* ===== 商品カード一覧 ===== */
+.product-list {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.product-card {
+    width: 180px;
+    text-align: center;
+}
+
+.product-image {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background-color: #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: #333;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.product-name {
+    font-size: 14px;
+    color: #333;
+}
