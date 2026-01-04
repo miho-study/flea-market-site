@@ -18,7 +18,7 @@
 
         {{-- ロゴ --}}
         <div class="header__logo">
-            <a href="/">MyApp</a>
+            <img src="{{ asset('images/logo.svg') }}" alt="ロゴ">
         </div>
 
         {{-- 検索フォーム --}}
@@ -37,33 +37,33 @@
 
         {{-- ログイン後のナビゲーション --}}
 <nav class="header__nav">
-        @auth
-            {{-- ログイン中に表示される --}}
-            {{-- <form action="{{ route('logout') }}" method="POST" style="display:inline;">
-                @csrf
-                <button type="submit">ログアウト</button>
-            </form> --}}
-            <a href="#" 
-   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-    ログアウト
-</a>
+    @auth
+        {{-- ログイン中 --}}
+        <a href="#"
+           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+            ログアウト
+        </a>
 
-<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">
-    @csrf
-</form>
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">
+            @csrf
+        </form>
 
-            <a href="{{ route('mypage') }}">マイページ</a>
-            <a href="{{ route('sell') }}" class="sell-btn">出品</a>
-        @endauth
+        <a href="{{ route('mypage') }}">マイページ</a>
 
-        @guest
-            {{-- 未ログイン時に表示される --}}
-            <a href="{{ route('login') }}">ログイン</a>
-            <a href="{{ route('mypage') }}">マイページ</a>
-            <a href="{{ route('sell') }}" class="sell-btn">出品</a>
+        {{-- 出品画面（GET） --}}
+        <a href="{{ route('sell.create') }}" class="sell-btn">出品</a>
+    @endauth
 
-        @endguest
-    </nav>
+    @guest
+        {{-- 未ログイン --}}
+        <a href="{{ route('login') }}">ログイン</a>
+        <a href="{{ route('mypage') }}">マイページ</a>
+
+        {{-- 未ログインでも出品画面へ（authでリダイレクトされる） --}}
+        <a href="{{ route('sell.create') }}" class="sell-btn">出品</a>
+    @endguest
+</nav>
+
 </header>
 
 <main class="main">

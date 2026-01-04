@@ -11,7 +11,7 @@
             <h1>プロフィール設定</h1>
         </div>
 
-        <form method="POST" action="{{ route('mypage.profile') }}" enctype="multipart/form-data">
+        <form method="POST" action="{{ route('mypage.profile.update') }}" enctype="multipart/form-data">
 
             @csrf
 
@@ -34,6 +34,10 @@
                 {{-- 非表示の file input --}}
                 <input id="profile_picture" name="profile_picture" type="file" accept="image/png, image/jpeg"
                     style="display:none;">
+
+                @error('profile_picture')
+                    <div class="error">{{ $message }}</div>
+                @enderror
             </div>
 
             <script>
@@ -65,7 +69,7 @@
             {{-- ユーザー名 --}}
             <div class="form-group">
                 <label for="name" class="item-title">ユーザー名</label>
-                <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus>
+                <input id="name" type="text" name="name" value="{{ old('name', $user->name) }}" autofocus>
 
                 {{-- 個別エラー --}}
                 @error('name')
@@ -76,7 +80,7 @@
             {{-- 郵便番号 --}}
             <div class="form-group">
                 <label for="post_code" class="item-title">郵便番号</label>
-                <input id="post_code" type="post_code" name="post_code" value="{{ old('post_code') }}" required>
+                <input id="post_code" type="text" name="post_code" value="{{ old('post_code', $user->post_code) }}">
 
                 @error('post_code')
                     <div class="error">{{ $message }}</div>
@@ -86,7 +90,7 @@
             {{-- 住所 --}}
             <div class="form-group">
                 <label for="address" class="item-title">住所</label>
-                <input id="address" type="address" name="address" value="{{ old('address') }}" required>
+                <input id="address" type="text" name="address" value="{{ old('address', $user->address) }}">
 
                 @error('address')
                     <div class="error">{{ $message }}</div>
@@ -96,9 +100,8 @@
             {{-- 建物名 --}}
             <div class="form-group">
                 <label for="building_name" class="item-title">建物名</label>
-                <input id="building_name" type="building_name" name="building_name" value="{{ old('building_name') }}"
-                    required>
-
+                <input id="building_name" type="text" name="building_name"
+                    value="{{ old('building_name', $user->building_name) }}">
 
                 @error('building_name')
                     <div class="error">{{ $message }}</div>

@@ -22,7 +22,7 @@ class ProfileController extends Controller
     {
         $user = auth()->user();
 
-        $data = $request->only(['name', 'email', 'address', 'post_code', 'building_name', 'phone']);
+        $data = $request->only(['name', 'address', 'post_code', 'building_name', 'profile_picture']);
 
         if ($request->hasFile('profile_picture')) {
             $profileImagePath = $request->file('profile_picture')->store('profiles', 'public');
@@ -31,6 +31,6 @@ class ProfileController extends Controller
 
         $user->update($data);
 
-        return redirect('/')->with('success', 'プロフィールを更新しました');
+        return redirect('/mypage/profile')->with('success', 'プロフィールを更新しました');
     }
 }

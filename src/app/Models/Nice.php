@@ -9,6 +9,8 @@ class Nice extends Model
 {
     use HasFactory;
 
+    protected $table = 'nice';
+
     public function user() {
     return $this->belongsTo(User::class);
 }

@@ -40,8 +40,17 @@ Route::get('/',[ItemController::class,'index']);
  // 商品検索機能
 Route::get('/search', [ItemController::class, 'search'])->name('search');
  // // 商品出品画面
-Route::get('/sell',[ItemController::class,'create'])->name('sell');
-Route::post('/sell',[ItemController::class,'store'])->name('sell');
+// 出品画面
+Route::get('/sell', [ListingController::class, 'create'])
+    ->middleware('auth')
+    ->name('sell.create');
+
+// 出品保存
+Route::post('/sell', [ListingController::class, 'store'])
+    ->middleware('auth')
+    ->name('sell.store');
+
+
  //プロフィール画面
 Route::get('/mypage',[ProfileController::class,'show'])->name('mypage');
 // プロフィール編集画面
@@ -49,7 +58,7 @@ Route::get('/mypage',[ProfileController::class,'show'])->name('mypage');
 // Route::post('/mypage/profile', [ProfileController::class, 'update'])->name('mypage.profile');
 Route::middleware(['auth'])->group(function () {
     Route::get('/mypage/profile', [ProfileController::class, 'edit'])->name('mypage.profile');
-    Route::post('/mypage/profile', [ProfileController::class, 'update']);
+    Route::post('/mypage/profile', [ProfileController::class, 'update'])->name('mypage.profile.update');
 });
 //いいね機能
 Route::post('/item/{item_id}',  [NiceController::class, 'store'])

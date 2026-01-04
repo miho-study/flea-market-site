@@ -27,7 +27,7 @@ public function search(Request $request)
     $keyword = $request->input('keyword');
 
     // 検索処理のサンプル（必要に応じて変更）
-    $products = Product::where('name', 'like', "%{$keyword}%")->get();
+    $products = Product::where('product_name', 'like', "%{$keyword}%")->get();
 
     return view('products.index', compact('products'));
 }
