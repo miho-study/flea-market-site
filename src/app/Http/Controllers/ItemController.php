@@ -32,4 +32,10 @@ public function search(Request $request)
     return view('products.index', compact('products'));
 }
 
+// routes/web.php
+public function show(Product $product)
+{
+    return view('products.detail', compact('product'));
+}
+
 }

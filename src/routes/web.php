@@ -52,14 +52,16 @@ Route::post('/sell', [ListingController::class, 'store'])
 
 
  //プロフィール画面
-Route::get('/mypage',[ProfileController::class,'show'])->name('mypage');
+Route::get('/mypage',[ProfileController::class,'show'])->middleware('auth')->name('mypage');
 // プロフィール編集画面
-// Route::get('/mypage/profile', [ProfileController::class, 'edit'])->name('mypage');
-// Route::post('/mypage/profile', [ProfileController::class, 'update'])->name('mypage.profile');
 Route::middleware(['auth'])->group(function () {
     Route::get('/mypage/profile', [ProfileController::class, 'edit'])->name('mypage.profile');
     Route::post('/mypage/profile', [ProfileController::class, 'update'])->name('mypage.profile.update');
 });
+//出品詳細画面
+Route::get('/item/{item_id}', [ItemController::class, 'show'])
+    ->name('item.show');
+
 //いいね機能
 Route::post('/item/{item_id}',  [NiceController::class, 'store'])
     ->middleware('auth')

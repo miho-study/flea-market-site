@@ -47,8 +47,21 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function nices()
-{
-    return $this->hasMany(Nice::class);
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    public function purchases()
+    {
+        return $this->hasMany(Purchase::class);
+    }
+
+     public function nices()
+    {
+        return $this->hasMany(Nice::class);
+    }
+
 }
-}
+

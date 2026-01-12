@@ -5,13 +5,28 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Requests\ProfileRequest;
+// use App\Models\Purchase;
+use App\Models\Product; 
+use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
      public function show()
 {
-    return view('users.profile');
+    $user = Auth::user();
+
+    $sellingProducts = Product::where('user_id', $user->id)->get();
+
+    // $purchasedProducts = Purchase::with('product')
+    //     ->where('user_id', $user->id)
+    //     ->get();
+
+    return view('users.profile', compact(
+        'sellingProducts',
+        // 'purchasedProducts'
+    ));
 }
+
     public function edit()
     {
         $user = auth()->user();
