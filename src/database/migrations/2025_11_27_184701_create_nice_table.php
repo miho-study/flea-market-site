@@ -13,11 +13,17 @@ class CreateNiceTable extends Migration
      */
     public function up()
     {
-        Schema::create('nice', function (Blueprint $table) {
+        Schema::create('nices', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('product_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')
+                  ->constrained()
+                  ->cascadeOnDelete();
+            $table->foreignId('product_id')
+                  ->constrained()
+                  ->cascadeOnDelete();
             $table->timestamps();
+
+            $table->unique(['user_id', 'product_id']);
         });
     }
 
@@ -28,6 +34,6 @@ class CreateNiceTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('nice');
+        Schema::dropIfExists('nices');
     }
 }

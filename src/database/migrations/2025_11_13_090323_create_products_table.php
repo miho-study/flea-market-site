@@ -13,6 +13,10 @@ class CreateProductsTable extends Migration
             $table->foreignId('user_id')
                   ->constrained()
                   ->cascadeOnDelete();
+            $table->foreignId('category_id')
+                  ->nullable()
+                  ->constrained('categories')
+                  ->cascadeOnDelete();
             $table->string('product_name', 255);
             $table->string('brand_name', 255)->nullable();
             $table->text('product_description');

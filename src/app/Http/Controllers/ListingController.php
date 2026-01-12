@@ -35,7 +35,12 @@ class ListingController extends Controller
             $data['product_image'] = $productImagePath;
         }
 
-        Product::create($data);
+        $product = Product::create($data);
+
+        // 複数カテゴリーを保存
+        if ($request->has('category_ids') && !empty($request->category_ids)) {
+            $product->categories()->sync($request->category_ids);
+        }
 
         return redirect()
             ->route('search')

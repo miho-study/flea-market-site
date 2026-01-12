@@ -5,8 +5,11 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CommentController;
+
 use
 App\Http\Controllers\ListingController;
+use App\Http\Controllers\NiceController;
 
 
 /*
@@ -61,8 +64,12 @@ Route::middleware(['auth'])->group(function () {
 //出品詳細画面
 Route::get('/item/{item_id}', [ItemController::class, 'show'])
     ->name('item.show');
-
 //いいね機能
-Route::post('/item/{item_id}',  [NiceController::class, 'store'])
+Route::post('/item/{item_id}/nice', [NiceController::class, 'store'])
     ->middleware('auth')
     ->name('nice.store');
+//コメント機能
+Route::post('/item/{item_id}/comments', [CommentController::class, 'store'])
+    ->middleware('auth')
+    ->name('comments.store');
+

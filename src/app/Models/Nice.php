@@ -9,7 +9,11 @@ class Nice extends Model
 {
     use HasFactory;
 
-    protected $table = 'nice';
+    
+    protected $fillable = [
+        'user_id',
+        'product_id',
+    ];
 
     public function user() {
     return $this->belongsTo(User::class);

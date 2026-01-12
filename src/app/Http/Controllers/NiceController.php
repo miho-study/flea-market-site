@@ -3,23 +3,32 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Product;   // ← これが必要
+use App\Models\Nice;
+use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 
 class NiceController extends Controller
 {
-    public function store(Product $product)
+    public function store($item_id)
     {
-        // ログインしていない場合は弾く
         $user = Auth::user();
-        if (!$user) {
-            return redirect()->route('login')->with('error', 'ログインが必要です');
-        }
 
-        // 重複 Nice 防止
-        if (!$user->nices()->where('product_id', $product->id)->exists()) {
-            $user->nices()->create([
-                'product_id' => $product->id
+        // 商品取得
+        $product = Product::findOrFail($item_id);
+
+        // すでにいいねしているか確認
+        $nice = Nice::where('user_id', $user->id)
+                    ->where('product_id', $product->id)
+                    ->first();
+
+        if ($nice) {
+            // いいね解除
+            $nice->delete();
+        } else {
+            // いいね追加
+            Nice::create([
+                'user_id' => $user->id,
+                'product_id' => $product->id,
             ]);
         }
 

@@ -13,9 +13,14 @@ class CreateProductCategoryTable extends Migration
      */
     public function up()
     {
-        Schema::create('product_category', function (Blueprint $table) {
+        Schema::create('category_product', function (Blueprint $table) {
             $table->id();
-            
+            $table->foreignId('category_id')
+                  ->constrained('categories')
+                  ->cascadeOnDelete();
+            $table->foreignId('product_id')
+                  ->constrained('products')
+                  ->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -27,6 +32,6 @@ class CreateProductCategoryTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('product_category');
+        Schema::dropIfExists('category_product');
     }
 }

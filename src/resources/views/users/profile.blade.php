@@ -35,7 +35,12 @@
             @forelse ($sellingProducts as $product)
                 <div class="product-card">
                     <img src="{{ asset('storage/' . $product->product_image) }}">
-                    <p class="product-name">{{ $product->product_name }}</p>
+                    <p class="product-name">
+    <a href="{{ route('item.show', $product->id) }}">
+        {{ $product->product_name }}
+    </a>
+</p>
+
                 </div>
             @empty
                 <p class="empty-text">出品した商品はありません</p>

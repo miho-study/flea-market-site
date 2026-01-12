@@ -32,9 +32,17 @@ public function search(Request $request)
     return view('products.index', compact('products'));
 }
 
-// routes/web.php
-public function show(Product $product)
+
+public function show($item_id)
 {
+    $product = Product::with([
+        'category',
+        'nices',
+        'comments.user',
+    ])
+    ->withCount('comments') // ← ★これを追加
+    ->findOrFail($item_id);
+
     return view('products.detail', compact('product'));
 }
 
