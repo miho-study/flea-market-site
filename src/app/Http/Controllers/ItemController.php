@@ -4,32 +4,67 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
-
+use Illuminate\Support\Facades\Auth;
 
 class ItemController extends Controller
 {
-public function index()
+public function index(Request $request)
 {
-    $user = auth()->user();
-    $niceIds = $user->nices()->pluck('product_id');
+    $user = Auth::user();
 
-    // マイリスト（いいね済）
-    $mylist = Product::whereIn('id', $niceIds)->get();
+    // tab がなければ recommend、想定外は弾く
+    $tab = $request->query('tab', 'recommend');
+    if (!in_array($tab, ['recommend', 'mylist'])) {
+        $tab = 'recommend';
+    }
 
-    // おすすめ（いいねしてない商品）
-   $recommend = Product::whereNotIn('id', $niceIds)->get();
+    // いいねしている商品ID
+    $likedProductIds = $user
+        ? $user->nices()->pluck('product_id')
+        : collect();
 
-    return view('products.index', compact('mylist', 'recommend'));
+    // マイリスト商品
+    $myListProducts = $user
+        ? Product::whereIn('id', $likedProductIds)->get()
+        : collect();
+
+    // おすすめ商品（マイリスト以外）
+    $recommendProducts = Product::whereNotIn('id', $likedProductIds)->get();
+
+    return view('products.index', [
+        'tab' => $tab,
+        'myListProducts' => $myListProducts,
+        'recommendProducts' => $recommendProducts,
+    ]);
 }
 
 public function search(Request $request)
 {
-    $keyword = $request->input('keyword');
+    $user = Auth::user();
 
-    // 検索処理のサンプル（必要に応じて変更）
+    // 検索キーワード
+    $keyword = $request->input('keyword');
     $products = Product::where('product_name', 'like', "%{$keyword}%")->get();
 
-    return view('products.index', compact('products'));
+    // いいねしている商品ID
+    $likedProductIds = $user
+        ? $user->nices()->pluck('product_id')
+        : collect();
+
+    // マイリスト商品
+    $myListProducts = $user
+        ? Product::whereIn('id', $likedProductIds)->get()
+        : collect();
+
+    // 検索結果を'おすすめ'タブとして表示
+    $recommendProducts = $products;
+    $tab = 'recommend';
+
+    return view('products.index', [
+        'tab' => $tab,
+        'myListProducts' => $myListProducts,
+        'recommendProducts' => $recommendProducts,
+    ]);
 }
 
 

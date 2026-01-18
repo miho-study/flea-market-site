@@ -127,6 +127,11 @@ input {
     margin-bottom: 30px;
 }
 
+.category-item {
+    margin: 0;
+    /* ← auto を殺す */
+}
+
 .category-buttons {
         max-width: 525px;
             margin: 0 auto;
@@ -161,13 +166,18 @@ input {
 .category-buttons {
     max-width: 525px;
     margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    /* ← 自動で改行 */
+    gap: 12px;
+    justify-content: flex-start;
+    /* ← 常に左揃え */
 }
-
 .category-row {
     display: flex;
     gap: 14px 12px;
     margin-bottom: 12px;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 

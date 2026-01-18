@@ -43,7 +43,10 @@
 
 </div>
 
-            <a href="#" class="buy-button">購入手続きへ</a>
+            <a href="{{ route('purchase.confirm', $product->id) }}" class="buy-button">
+    購入手続きへ
+</a>
+
 
             {{-- 商品説明 --}}
             <div class="section">

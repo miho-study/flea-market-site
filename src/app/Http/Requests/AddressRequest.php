@@ -13,7 +13,8 @@ class AddressRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        // フォームリクエストの認可を有効にする
+        return true;
     }
 
     /**
@@ -23,19 +24,19 @@ class AddressRequest extends FormRequest
      */
     public function rules()
     {
-        // return [
-        //     'post_code' => ['required', 'regex:/^\d{3}-\d{4}$/'],
-        //     'address' => ['required'],
-        // ];
+        return [
+            'post_code' => ['required'],
+            'address' => ['required'],
+            'building_name' => ['nullable'],
+        ];
     }
 
-    // public function messages()
-    // {
-    //     return [
-    //     'post_code.required' => '郵便番号を入力してください',
-    //     'post_code.regex' => '郵便番号はXXX-XXXXの形式で入力してください',
-    //     'address.required' => '住所を入力してください',
-    //     ];
-    // }
+    public function messages()
+    {
+        return [
+            'post_code.required' => '郵便番号を入力してください',
+            'address.required' => '住所を入力してください',
+        ];
+    }
 
 }

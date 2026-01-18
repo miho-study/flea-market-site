@@ -13,7 +13,7 @@ class PurchaseRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,17 +23,17 @@ class PurchaseRequest extends FormRequest
      */
     public function rules()
     {
-        // return [
-        //     'payment_method_id' => ['required'],
-        //     'shipping_address' => ['required'],
-        // ];
+        return [
+            'payment_method_id' => ['required'],
+            'shipping_address' => ['required'],
+        ];
     }
 
-    // public function messages()
-    // {
-    //     return [
-    //         'payment_method_id.required' => '支払い方法を選択してください',
-    //         'shipping_address.required' => '配送先住所を入力してください',
-    //     ];
-    // }
+    public function messages()
+    {
+        return [
+            'payment_method_id.required' => '支払い方法を選択してください',
+            'shipping_address.required' => '配送先住所を入力してください',
+        ];
+    }
 }

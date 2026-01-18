@@ -77,38 +77,14 @@
                 <label class='category-title'>カテゴリー</label>
 
 <div class="category-buttons">
-
-    {{-- 1段目：4個 --}}
-    <div class="category-row">
-        @foreach ($categories->slice(0, 4) as $category)
-            <label class="category-item">
-                <input type="checkbox" name="category_ids[]" value="{{ $category->id }}">
-                <span>{{ $category->category_name }}</span>
-            </label>
-        @endforeach
-    </div>
-
-    {{-- 2段目：5個 --}}
-    <div class="category-row">
-        @foreach ($categories->slice(4, 5) as $category)
-            <label class="category-item">
-                <input type="checkbox" name="category_ids[]" value="{{ $category->id }}">
-                <span>{{ $category->category_name }}</span>
-            </label>
-        @endforeach
-    </div>
-
-    {{-- 3段目：3個 --}}
-    <div class="category-row">
-        @foreach ($categories->slice(9, 3) as $category)
-            <label class="category-item">
-                <input type="checkbox" name="category_ids[]" value="{{ $category->id }}">
-                <span>{{ $category->category_name }}</span>
-            </label>
-        @endforeach
-    </div>
-
+    @foreach ($categories as $category)
+        <label class="category-item">
+            <input type="checkbox" name="category_ids[]" value="{{ $category->id }}">
+            <span>{{ $category->category_name }}</span>
+        </label>
+    @endforeach
 </div>
+
 
 
                 @error('category_ids')

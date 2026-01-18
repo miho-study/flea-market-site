@@ -63,5 +63,11 @@ class User extends Authenticatable
         return $this->hasMany(Nice::class);
     }
 
+    public function addresses()
+    {
+    return $this->hasMany(Address::class);
+    }
+
+
 }
 

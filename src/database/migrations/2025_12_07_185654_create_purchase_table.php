@@ -9,9 +9,7 @@ return new class extends Migration {
     {
         Schema::create('purchases', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('payment_method_id')
-                  ->constrained()
-                  ->cascadeOnDelete();
+            $table->string('payment_method');
             $table->foreignId('user_id')
                   ->constrained()
                   ->cascadeOnDelete();
