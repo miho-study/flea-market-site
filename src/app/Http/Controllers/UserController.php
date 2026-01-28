@@ -8,7 +8,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        return view('users.index');  // 適宜変更
+        return view('users.index');
     }
     public function showLoginForm()
 {

@@ -28,24 +28,34 @@
 
             {{-- いいね・コメント数 --}}
             <div class="icons">
-    <form action="{{ route('nice.store', $product->id) }}" method="POST">
-        @csrf
-<button type="submit" class="icon-btn vertical">
-    <img src="{{ asset('images/heart.png') }}" alt="like">
-    <span>{{ $product->nices->count() }}</span>
-</button>
-    </form>
+                @php
+                    $isOwner = auth()->id() === $product->user_id;
+                @endphp
 
-<div class="icon-btn vertical">
-    <img src="{{ asset('images/comment.png') }}" alt="comment">
-    <span>{{ $product->comments->count() }}</span>
-</div>
+                <form action="{{ route('nice.store', $product->id) }}" method="POST" class="{{ $isOwner ? 'owner' : '' }}">
+                    @csrf
+                    <button type="submit" class="icon-btn vertical {{ $isLiked ? 'liked' : '' }}">
+                        <svg class="heart-icon" viewBox="0 0 24 24">
+                            <path
+                                d="M20.8 4.6c-1.9-1.9-5-1.9-6.9 0L12 6.5l-1.9-1.9c-1.9-1.9-5-1.9-6.9 0-1.9 1.9-1.9 5 0 6.9L12 21l8.8-9.5c1.9-1.9 1.9-5 0-6.9z" />
+                        </svg>
+                        <span>{{ $product->nices->count() }}</span>
+                    </button>
+                </form>
 
-</div>
+
+                <div class="icon-btn vertical">
+                    <img src="{{ asset('images/comment.png') }}" alt="comment">
+                    <span>{{ $product->comments->count() }}</span>
+                </div>
+
+
+            </div>
+
 
             <a href="{{ route('purchase.confirm', $product->id) }}" class="buy-button">
-    購入手続きへ
-</a>
+                購入手続きへ
+            </a>
 
 
             {{-- 商品説明 --}}
@@ -57,66 +67,112 @@
             {{-- 商品情報 --}}
             <div class="section">
                 <h2>商品の情報</h2>
-<div class="category-row">
-    <p class="label">カテゴリー</p>
-    <div class="category-tags">
-        @forelse ($product->categories as $category)
-            <span class="tag">{{ $category->category_name }}</span>
-        @empty
-            <span class="tag gray">未設定</span>
-        @endforelse
-    </div>
-</div>
+                <div class="category-row">
+                    <p class="label">カテゴリー</p>
+                    <div class="category-tags">
+                        @forelse ($product->categories as $category)
+                            <span class="tag">{{ $category->category_name }}</span>
+                        @empty
+                        @endforelse
+                    </div>
+                </div>
 
 
-<p class="product-condition">
-    商品の状態
-    <span>{{ $product->product_condition ?? '未設定' }}</span>
-</p>
+                <div class="category-row">
+                    <p class="label">商品の状態</p>
+                    <span class="product-condition-tags">
+                        {{ $product->product_condition ?? '未設定' }}
+                    </span>
+                </div>
 
 
-{{-- コメント --}}
-<div class="section">
-        <h2>コメント({{ $product->comments_count }})</h2>
-        <div class="comment-list">
-        @forelse ($product->comments as $comment)
-<div class="comment-item">
-<div class="comment-header">
-    <img
-        src="{{ $comment->user->profile_picture
-            ? asset('storage/' . $comment->user->profile_picture)
-            : asset('default.jpeg') }}"
-        class="comment-icon"
-        alt="ユーザーアイコン"
-    >
-    <strong>{{ $comment->user->name }}</strong>
-</div>
+                {{-- コメント --}}
+                <div class="section">
+                    <h2>コメント({{ $product->comments_count }})</h2>
+                    <div class="comment-list">
+                        @forelse ($product->comments as $comment)
+                            <div class="comment-item">
+                                <div class="comment-header">
+                                    <img src="{{ $comment->user->profile_picture
+                                        ? asset('storage/' . $comment->user->profile_picture)
+                                        : asset('default.jpeg') }}"
+                                        class="comment-icon" alt="ユーザーアイコン">
+                                    <strong>{{ $comment->user->name }}</strong>
+                                </div>
 
-    <p>{{ $comment->comment }}</p>
-</div>
+                                <div class="comment-body">
+                                    {{ $comment->comment }}
+                                </div>
+                            </div>
+                        @empty
+                        @endforelse
+                    </div>
 
-        @empty
-            <p>まだコメントはありません</p>
-        @endforelse
-    </div>
-    <h2>商品へのコメント</h2>
+                    @error('comment')
+                        <div class="error">{{ $message }}</div>
+                    @enderror
 
-    {{-- コメント投稿フォーム --}}
-    <form method="POST" action="{{ route('comments.store', $product->id) }}">
-        @csrf
+                </div>
+                <h2>商品へのコメント</h2>
 
-        <textarea
-            name="comment"
-            required
-        ></textarea>
+                {{-- コメント投稿フォーム --}}
+                <form method="POST" action="{{ route('comments.store', $product->id) }}">
+                    @csrf
 
-        <button type="submit" class="comment-button">
-            コメントを送信する
-        </button>
-    </form>
-</div>
+                    <textarea name="comment" required></textarea>
+
+                    <button type="submit" class="comment-button">
+                        コメントを送信する
+                    </button>
+                </form>
+            </div>
 
 
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const niceForm = document.querySelector('form[action*="/nice"]');
+            if (!niceForm) return;
+
+            niceForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const btn = niceForm.querySelector('button');
+                const countSpan = btn.querySelector('span');
+                const formData = new FormData(niceForm);
+                const action = niceForm.action;
+                const tokenMeta = document.querySelector('meta[name="csrf-token"]');
+                const csrf = tokenMeta ? tokenMeta.getAttribute('content') : (niceForm.querySelector(
+                    'input[name="_token"]') || {}).value;
+
+                try {
+                    const res = await fetch(action, {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': csrf,
+                        },
+                        body: formData,
+                        credentials: 'same-origin'
+                    });
+
+                    if (res.ok) {
+                        const likedNow = btn.classList.toggle('liked');
+                        if (countSpan) {
+                            const n = parseInt(countSpan.textContent || '0', 10);
+                            countSpan.textContent = likedNow ? n + 1 : Math.max(0, n - 1);
+                        }
+                    } else {
+                        niceForm.submit();
+                    }
+                } catch (err) {
+                    niceForm.submit();
+                }
+            });
+        });
+    </script>
 @endsection

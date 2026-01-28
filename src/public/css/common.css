@@ -61,7 +61,6 @@
     align-items: center;
 }
 
-/* 検索フォームの中身を横並びに */
 .search-form {
     display: flex;
     align-items: center;
@@ -70,7 +69,6 @@
 .search-input {
     padding: 6px 10px;
     width: 400px;
-        /* ← ここで好きな幅に変更 */
     height: 35px;
 }
 

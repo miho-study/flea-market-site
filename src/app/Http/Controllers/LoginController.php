@@ -1,10 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\User;
-use Illuminate\Http\Request;
+
 use App\Http\Requests\LoginRequest;
-use Illuminate\Support\Facades\Auth;
+use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
 class LoginController extends Controller
 {
@@ -12,16 +11,9 @@ class LoginController extends Controller
     {
         return view('auth.login');
     }
+
     public function login(LoginRequest $request)
     {
-        // $credentials = $request->only('email', 'password');
-        // if (auth()->attempt($credentials)) { $request->session()->regenerate(); // セッション固定攻撃対策 
-        if (Auth::attempt($request->validated())) {
-        $request->session()->regenerate();
-        return redirect('/');
-    }
-    return back()->withErrors([
-        'login' => 'ログイン情報が登録されていません。'
-    ])->withInput();
+        return app(AuthenticatedSessionController::class)->store($request);
     }
 }

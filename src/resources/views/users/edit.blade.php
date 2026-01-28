@@ -47,14 +47,11 @@
                 changeImageBtn.addEventListener('click', function() {
                     profilePictureInput.click();
                 });
-
-                // 画像が選択されたときのプレビュー処理
                 profilePictureInput.addEventListener('change', function(e) {
                     const file = e.target.files[0];
                     if (file) {
                         const reader = new FileReader();
                         reader.onload = function(event) {
-                            // 既存の画像を置き換える
                             const imgElement = document.querySelector('.rounded-circle');
                             if (imgElement) {
                                 imgElement.src = event.target.result;
@@ -110,9 +107,5 @@
 
             <button type="submit" class="update_btn">更新する</button>
         </form>
-
-        {{-- <div style="margin-top: 20px; text-align: center;">
-            <p><a href="{{ route('/') }}">更新する</a></p>
-        </div> --}}
     </div>
 @endsection

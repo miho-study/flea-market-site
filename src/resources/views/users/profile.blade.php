@@ -20,13 +20,15 @@
         </div>
 
         {{-- タブ --}}
+        @php $page = request()->query('page', 'sell'); @endphp
         <div class="tab-menu">
-            <button class="tab active" data-target="selling">出品した商品</button>
-            <button class="tab" data-target="purchased">購入した商品</button>
+            <a href="{{ route('mypage', ['page' => 'sell']) }}"
+                class="tab {{ $page === 'sell' ? 'active' : '' }}">出品した商品</a>
+            <a href="{{ route('mypage', ['page' => 'buy']) }}" class="tab {{ $page === 'buy' ? 'active' : '' }}">購入した商品</a>
         </div>
 
         {{-- 出品した商品 --}}
-        <div id="selling" class="tab-content active">
+        <div id="selling" class="tab-content {{ $page === 'sell' ? 'active' : '' }}">
             <div class="product-list">
                 @forelse ($sellingProducts as $product)
                     <div class="product-card">
@@ -39,16 +41,17 @@
 
                     </div>
                 @empty
-                    <p class="empty-text">出品した商品はありません</p>
                 @endforelse
             </div>
         </div>
 
         {{-- 購入した商品 --}}
-        <div id="purchased" class="tab-content">
+        <div id="purchased" class="tab-content {{ $page === 'buy' ? 'active' : '' }}">
             <div class="product-list">
                 @forelse ($purchasedProducts as $purchase)
-                    @php $product = $purchase->product; @endphp
+                    @php
+                        $product = $purchase->product;
+                    @endphp
                     @if ($product)
                         <div class="product-card">
                             <img src="{{ $product->product_image ? asset('storage/' . $product->product_image) : asset('default.jpeg') }}"
@@ -61,22 +64,8 @@
                         </div>
                     @endif
                 @empty
-                    <p class="empty-text">購入した商品はありません</p>
                 @endforelse
             </div>
         </div>
     </div>
-
-    {{-- JS --}}
-    <script>
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-
-                tab.classList.add('active');
-                document.getElementById(tab.dataset.target).classList.add('active');
-            });
-        });
-    </script>
 @endsection

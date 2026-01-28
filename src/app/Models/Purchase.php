@@ -10,7 +10,6 @@ class Purchase extends Model
          protected $fillable = [
      'user_id',
      'product_id',
-     // Use a string payment_method (matches the form) instead of payment_method_id
      'payment_method',
      'shipping_postcode',
      'shipping_address',

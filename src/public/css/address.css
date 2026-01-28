@@ -1,31 +1,28 @@
 .title {
     text-align: center;
-    /* 親で中央揃え */
 }
 
 h1 {
     display: flex;
     justify-content: center;
     margin-top: 40x;
-    margin-bottom: 40px;
+    margin-bottom: 80px;
 }
 
 label {
     display: block;
-    width: 525px;
+    width: 600px;
     margin: 0 auto 6px;
     font-weight: bold;
     text-align: left;
 }
 
 .form-group {
-    margin-bottom: 40px;
-    /* 基本の余白 */
+    margin-bottom: 50px;
 }
 
 input {
-    width: 525px;
-    /* ここで横幅を指定 */
+    width: 600px;
     height: 35px;
     display: block;
     margin: 0 auto;
@@ -39,9 +36,6 @@ input {
     font-weight: bold;
 }
 
-/* .item-title:nth-of-type(1) {
-    margin-top: 70px;
-} */
 .rounded-circle {
     border-radius: 50%;
     margin-left: 33%;
@@ -67,7 +61,7 @@ input {
     border: none;
     display: block;
     margin: 0 auto;
-    width: 525px;
+    width: 600px;
     height: 40px;
     border-radius: 3px;
 }

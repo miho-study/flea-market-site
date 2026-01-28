@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\Purchase;
-use App\Models\Address;
 use App\Http\Requests\PurchaseRequest;
 use App\Http\Requests\AddressRequest;
 use App\Http\Requests\ProfileRequest;
@@ -15,11 +14,22 @@ class PurchaseController extends Controller
 public function confirm($item_id)
 {
     $product = Product::findOrFail($item_id);
+    $user = Auth::user();
+
+    $hasCommented = $product->comments()
+        ->where('user_id', $user->id)
+        ->exists();
+
+    if (! $hasCommented) {
+        return back()->withErrors([
+            'comment' => '購入するには、この商品にコメントを投稿してください'
+        ]);
+    }
 
     $address = session('purchase_address') ?? [
-        'post_code' => Auth::user()->post_code,
-        'address'   => Auth::user()->address,
-        'building_name'  => Auth::user()->building_name,
+        'post_code' => $user->post_code,
+        'address' => $user->address,
+        'building_name' => $user->building_name,
     ];
 
     return view('purchases.purchase', compact('product', 'address'));
@@ -28,64 +38,56 @@ public function confirm($item_id)
 public function store(PurchaseRequest $request, $item_id)
 {
     $product = Product::findOrFail($item_id);
+    $user = Auth::user();
 
     $address = session('purchase_address') ?? [
-        'post_code' => Auth::user()->post_code,
-        'address'   => Auth::user()->address,
-        'building_name'  => Auth::user()->building_name,
+        'post_code' => $user->post_code,
+        'address' => $user->address,
+        'building_name' => $user->building_name,
     ];
 
-    Purchase::create([
-        'user_id' => Auth::id(),
-        'product_id' => $product->id,
-        'payment_method' => $request->payment_method,
-        'shipping_postcode' => $address['post_code'],
-        'shipping_address' => $address['address'],
-        'shipping_building' => $address['building_name'],
-    ]);
+    $shipping = trim($address['address'] ?? '');
+
+        Purchase::create([
+            'user_id' => $user->id,
+            'product_id' => $product->id,
+            'payment_method' => $request->payment_method,
+            'shipping_postcode' => $address['post_code'] ?? '',
+            'shipping_address' => $shipping,
+            'shipping_building' => $address['building_name'] ?? '',
+        ]);
 
     session()->forget('purchase_address');
 
-    $product->update([
-        'is_sold' => true,
-    ]);
+    $product->update(['is_sold' => true]);
 
     return redirect()->route('index')->with('success', '購入が完了しました');
 }
 
-    // 住所変更画面表示
-    public function edit($item_id)
-    {
-        $user = Auth::user();
 
-        $address = Address::where('user_id', $user->id)
-            ->where('is_default', true)
-            ->first();
+public function edit($item_id)
+{
+    $user = Auth::user();
 
-        return view('purchases.address', compact(
-            'item_id',
-            'address'
-        ));
-    }
+    $address = session('purchase_address') ?? [
+        'post_code' => $user->post_code,
+        'address' => $user->address,
+        'building_name' => $user->building_name,
+    ];
 
-    // 住所更新処理
-    public function update(AddressRequest $request, $item_id)
-    {
-        $request->validate([
-            'post_code' => 'required',
-            'address'   => 'required',
-        ]);
+    return view('purchases.address', compact('item_id', 'address'));
+}
 
-    // session に保存（購入中の一時住所）
-        session([
-            'purchase_address' => [
-                'post_code' => $request->post_code,
-                'address'   => $request->address,
-                'building_name'  => $request->building_name,
-            ]
-        ]);
+public function update(AddressRequest $request, $item_id)
+{
+    session([
+        'purchase_address' => [
+            'post_code' => $request->post_code,
+            'address' => $request->address,
+            'building_name' => $request->building_name,
+        ]
+    ]);
 
-        // 確認画面に戻す（存在するルート名に合わせる）
-        return redirect()->route('purchase.confirm', $item_id);
-    }
+    return redirect()->route('purchase.confirm', $item_id);
+}
 }

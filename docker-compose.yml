@@ -21,7 +21,7 @@ services:
     platform: linux/arm64/v8
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: laravel_db
+      MYSQL_DATABASE: market_db
       MYSQL_USER: laravel_user
       MYSQL_PASSWORD: laravel_pass
     command:

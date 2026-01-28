@@ -11,52 +11,51 @@ class ItemController extends Controller
 public function index(Request $request)
 {
     $user = Auth::user();
+    $userId = Auth::id();
 
-    // tab がなければ recommend、想定外は弾く
     $tab = $request->query('tab', 'recommend');
     if (!in_array($tab, ['recommend', 'mylist'])) {
         $tab = 'recommend';
     }
 
-    // いいねしている商品ID
     $likedProductIds = $user
         ? $user->nices()->pluck('product_id')
         : collect();
 
-    // マイリスト商品
     $myListProducts = $user
-        ? Product::whereIn('id', $likedProductIds)->get()
+        ? Product::whereIn('id', $likedProductIds)
+            ->where('user_id', '!=', $userId)
+            ->get()
         : collect();
 
-    // おすすめ商品（マイリスト以外）
-    $recommendProducts = Product::whereNotIn('id', $likedProductIds)->get();
+    $recommendProducts = Product::whereNotIn('id', $likedProductIds)
+        ->when($userId, function ($query) use ($userId) {
+            $query->where('user_id', '!=', $userId);
+        })
+        ->get();
 
-    return view('products.index', [
-        'tab' => $tab,
-        'myListProducts' => $myListProducts,
-        'recommendProducts' => $recommendProducts,
-    ]);
+    return view('products.index', compact(
+        'tab',
+        'myListProducts',
+        'recommendProducts'
+    ));
 }
 
 public function search(Request $request)
 {
     $user = Auth::user();
 
-    // 検索キーワード
     $keyword = $request->input('keyword');
     $products = Product::where('product_name', 'like', "%{$keyword}%")->get();
 
-    // いいねしている商品ID
     $likedProductIds = $user
         ? $user->nices()->pluck('product_id')
         : collect();
 
-    // マイリスト商品
     $myListProducts = $user
         ? Product::whereIn('id', $likedProductIds)->get()
         : collect();
 
-    // 検索結果を'おすすめ'タブとして表示
     $recommendProducts = $products;
     $tab = 'recommend';
 
@@ -71,14 +70,23 @@ public function search(Request $request)
 public function show($item_id)
 {
     $product = Product::with([
-        'category',
+        'categories',
         'nices',
         'comments.user',
     ])
-    ->withCount('comments') // ← ★これを追加
+    ->withCount('comments')
     ->findOrFail($item_id);
 
-    return view('products.detail', compact('product'));
+    $isLiked = false;
+
+    if (Auth::check()) {
+        $isLiked = $product->nices()
+            ->where('user_id', Auth::id())
+            ->exists();
+    }
+
+    return view('products.detail', compact('product', 'isLiked'));
 }
+
 
 }

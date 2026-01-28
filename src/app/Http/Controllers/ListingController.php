@@ -15,7 +15,7 @@ class ListingController extends Controller
 
     return view('products.listing', compact('categories'));
     }
-
+    
     public function store(ExhibitionRequest $request)
     {
         $user = auth()->user();
@@ -28,7 +28,8 @@ class ListingController extends Controller
             'price',
         ]);
         
-        $data['user_id'] = $user->id;
+    $data['user_id'] = $user->id;
+    $data['category_id'] = collect($request->category_ids)->first();
 
         if ($request->hasFile('product_image')) {
             $productImagePath = $request->file('product_image')->store('products', 'public');
@@ -37,7 +38,6 @@ class ListingController extends Controller
 
         $product = Product::create($data);
 
-        // 複数カテゴリーを保存
         if ($request->has('category_ids') && !empty($request->category_ids)) {
             $product->categories()->sync($request->category_ids);
         }

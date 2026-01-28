@@ -18,6 +18,11 @@ class Product extends Model
         'price',
         'user_id',
         'category_id',
+        'is_sold',
+    ];
+
+    protected $casts = [
+        'is_sold' => 'boolean',
     ];
 
 

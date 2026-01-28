@@ -1,6 +1,5 @@
 .title {
     text-align: center;
-    /* 親で中央揃え */
 }
 h1 {
     display: flex;
@@ -16,14 +15,12 @@ label {
 }
 .form-group {
     margin-bottom: 20px;
-    /* 基本の余白 */
 }
 .form-group:nth-of-type(4) {
     margin-bottom: 70px;
 }
 input {
     width: 525px;
-    /* ここで横幅を指定 */
     height: 35px;
     display: block;
     margin: 0 auto;

@@ -46,6 +46,6 @@ class ProfileController extends Controller
 
         $user->update($data);
 
-        return redirect('/mypage/profile')->with('success', 'プロフィールを更新しました');
+        return redirect('/')->with('success', 'プロフィールを更新しました');
     }
 }

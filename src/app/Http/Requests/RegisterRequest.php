@@ -30,13 +30,9 @@ class RegisterRequest extends FormRequest
        ];
     }
 
-        /**
-     * validated() を上書きして password_confirmation も含める
-     */
     public function validated($key = null, $default = null)
     {
         $validated = parent::validated();
-        // password_confirmation をバリデーション後データに追加（Fortifyで使用）
         $validated['password_confirmation'] = $this->input('password_confirmation');
         return $key ? ($validated[$key] ?? $default) : $validated;
     }

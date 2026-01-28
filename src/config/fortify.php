@@ -169,10 +169,6 @@ return [
     Features::emailVerification(),       // メール認証（必要なら）
     Features::updateProfileInformation(),
     Features::updatePasswords(),
-    Features::twoFactorAuthentication([
-        'confirm' => true,
-        'confirmPassword' => true,
-    ]),
 ],
 
 ];

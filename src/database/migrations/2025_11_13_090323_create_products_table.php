@@ -14,7 +14,6 @@ class CreateProductsTable extends Migration
                   ->constrained()
                   ->cascadeOnDelete();
             $table->foreignId('category_id')
-                  ->nullable()
                   ->constrained('categories')
                   ->cascadeOnDelete();
             $table->string('product_name', 255);
